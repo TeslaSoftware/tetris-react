@@ -3,6 +3,7 @@
  *  their rotation field (so each is a square).
  * However, 0 represents empty cell.
  */
+//TODO: Consider refactoring Tetromino to abstract object that accepts properties of shape and color.
 export const TETROMINOS = {
   0: { shape: [[0]], color: "0, 0, 0" },
   I: {
