@@ -11,13 +11,17 @@ export const usePlayer = () => {
   });
 
   const updatePlayerPos = ({ x, y, collided }) => {
+      console.log("moving player pos by x = " + x + " y = " + y + " collided = " + collided);
+      console.log("NEW POSITION: X = " + (player.pos.x + x) + " Y = " + (player.pos.y + y));
     setPlayer((prevState) => ({
       ...prevState,
-      pos: { x: (prevState.pos.x += x), y: (prevState.pos.y += y), collided },
+      pos: { x: (prevState.pos.x + x), y: (prevState.pos.y + y)},
+      collided,
     }));
   };
 
   const resetPlayer = useCallback(() => {
+    console.log("Resting player");
     setPlayer({
         //resets to kind of in the middle
         pos: {x: STAGE_WIDTH / 2 -2, y: 0},
