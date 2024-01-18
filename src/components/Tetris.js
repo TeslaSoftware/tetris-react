@@ -12,6 +12,7 @@ import StartButton from "./StartButton";
 // Custom Hooks
 import { usePlayer } from "../hooks/usePlayer";
 import { useStage } from "../hooks/useStage";
+import { useInterval } from "../hooks/useInterval";
 
 const Tetris = () => {
   const [dropTime, setDropTime] = useState(null);
@@ -34,26 +35,37 @@ const Tetris = () => {
     setStage(createStage());
     resetPlayer();
     setGameOver(false);
+    setDropTime(1000);
   };
 
   const drop = () => {
     if (!checkCollision(player, stage, { x: 0, y: 1 })) {
       console.log("dropping player did not collide");
-      updatePlayerPos({ x: 0, y: 1, collided: false });      
+      updatePlayerPos({ x: 0, y: 1, collided: false });
     } else {
       console.log("dropping player caused collision");
       // Game Over
-      if(player.pos.y < 1) {
+      if (player.pos.y < 1) {
         console.log("GAME OVER!");
         setGameOver(true);
         setDropTime(null);
       }
-      updatePlayerPos({x: 0, y: 0, collided: true});
+      updatePlayerPos({ x: 0, y: 0, collided: true });
     }
   };
 
+  const keyUp = (event => {
+    const keyCode = event.keyCode;
+    if(!gameOver) {
+      if(keyCode === 40) {
+        setDropTime(1000);
+      }
+    }
+  })
+
   const dropPlayer = () => {
-      console.log("dropping player");
+    console.log("dropping player");
+    setDropTime(null);
     drop();
   };
 
@@ -76,6 +88,10 @@ const Tetris = () => {
     }
   };
 
+  useInterval(() => {
+    drop();
+  }, dropTime);
+
   const gameOverOrGameDisplay = gameOver ? (
     <Display gameOver={gameOver} text="Game Over" />
   ) : (
@@ -87,7 +103,7 @@ const Tetris = () => {
   );
 
   return (
-    <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)}>
+    <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={(e) => move(e)} onKeyUp={keyUp}>
       <StyledTetris>
         <Stage stage={stage} />
         <aside>
