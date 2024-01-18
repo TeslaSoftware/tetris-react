@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { checkCollision, STAGE_WIDTH } from "../gameHelpers";
+import { checkCollision } from "../gameHelpers";
+import {STAGE_WIDTH} from "../constants";
 
 import { TETROMINOS, randomTetromino } from "../tetrominos";
 
@@ -10,30 +11,33 @@ export const usePlayer = () => {
     collided: false,
   });
 
-  const rotate = (matrix, dir) => {
+  const rotate = (matrix, direction) => {
     // Transpose (rows become columns and vice versa)
-    const rotatedTetro = matrix.map((unused, index) =>
-      matrix.map((column) => column[index])
+    const rotatedMatrix = matrix.map((unused, rowIndex) =>
+      matrix.map((column) => column[rowIndex])
     );
     // Reverse each row to get a rotated matrix
-    if(dir > 0) { 
-      return rotatedTetro.map(row => row.reverse());
+    if(direction > 0) { 
+      return rotatedMatrix.map(row => row.reverse());
     }
 
-    return rotatedTetro.reverse();
+    return rotatedMatrix.reverse();
   };
 
-  const playerRotate = (stage, dir) => {
+  const playerRotate = (stage, direction) => {
+    // Deep clone Player object
     const clonedPlayer = JSON.parse(JSON.stringify(player));
-    clonedPlayer.tetromino = rotate(clonedPlayer.tetromino, dir);
+    clonedPlayer.tetromino = rotate(clonedPlayer.tetromino, direction);
 
     const posX = clonedPlayer.pos.x;
     let offset = 1;
+    // Move the tetromino until it does not collide
     while(checkCollision(clonedPlayer, stage, {x: 0, y: 0})) {
       clonedPlayer.pos.x += offset;
       offset = -(offset + (offset > 0 ? 1: -1));
-      if(offset > clonedPlayer.tetromino[0].length){
-        rotate(clonedPlayer.tetromino, -dir);
+      const tetrominoWidth =  clonedPlayer.tetromino[0].length;
+      if(offset > tetrominoWidth){
+        rotate(clonedPlayer.tetromino, -direction);
         clonedPlayer.pos.x = posX;
         return;
       }
@@ -62,7 +66,7 @@ export const usePlayer = () => {
   };
 
   const resetPlayer = useCallback(() => {
-    console.log("Resting player");
+    console.log("Reseting player");
     setPlayer({
       //resets to kind of in the middle
       pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },

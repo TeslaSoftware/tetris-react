@@ -48,23 +48,23 @@ const Tetris = () => {
 
   const drop = () => {
     // Increase level when player cleared 10 rows
-    if(rows > (level + 1) *10 ) {
-      setLevel(prev => prev + 1);
+    if (rows > (level + 1) * 10) {
+      setLevel((prev) => prev + 1);
       //Also increase the speed
       setDropTime(getDropTime());
     }
-    if (!checkCollision(player, stage, { x: 0, y: 1 })) {
-      console.log("dropping player did not collide");
-      updatePlayerPos({ x: 0, y: 1, collided: false });
-    } else {
-      console.log("dropping player caused collision");
+
+    if (checkCollision(player, stage, { x: 0, y: 1 })) {
+      console.log("dropping caused collision");
       // Game Over
       if (player.pos.y < 1) {
-        console.log("GAME OVER!");
         setGameOver(true);
         setDropTime(null);
       }
       updatePlayerPos({ x: 0, y: 0, collided: true });
+    } else {
+      console.log("dropping did not collide");
+      updatePlayerPos({ x: 0, y: 1, collided: false });
     }
   };
 
