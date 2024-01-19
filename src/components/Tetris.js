@@ -53,11 +53,11 @@ const Tetris = () => {
       //Also increase the speed
       setDropTime(getDropTime());
     }
-
     if (checkCollision(player, stage, { x: 0, y: 1 })) {
       console.log("dropping caused collision");
       // Game Over
       if (player.pos.y < 1) {
+        console.log("GAME OVER!");
         setGameOver(true);
         setDropTime(null);
       }
@@ -106,14 +106,18 @@ const Tetris = () => {
     drop();
   }, dropTime);
 
-  const gameOverOrGameDisplay = gameOver ? (
-    <Display gameOver={gameOver} text="Game Over" />
+  const asideContent = gameOver ? (
+    <aside>
+      <Display gameOver={gameOver} text="Game Over" />
+      <StartButton callback={startGame} />
+    </aside>
   ) : (
-    <div>
+    <aside>
       <Display text={`Score: ${score}`}></Display>
       <Display text={`Rows: ${rows}`}></Display>
       <Display text={`Level: ${level}`}></Display>
-    </div>
+      <StartButton callback={startGame} />
+    </aside>
   );
 
   return (
@@ -125,10 +129,7 @@ const Tetris = () => {
     >
       <StyledTetris>
         <Stage stage={stage} />
-        <aside>
-          {gameOverOrGameDisplay}
-          <StartButton callback={startGame} />
-        </aside>
+        {asideContent}
       </StyledTetris>
     </StyledTetrisWrapper>
   );
