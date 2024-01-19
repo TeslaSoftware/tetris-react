@@ -8,10 +8,16 @@ export const StyledStartButton = styled.button`
     width: 100%;
     border-radius: 20px;
     border: none;
+    box-shadow: inset #333 0px 0px 4px 4px;
     color: white;
-    background: #333;
+    background: #1b85dc;
     font-family: Pixel, Arial, Helvetica, sans-serif;
     font-size: 1rem;
     outline: none;
     cursor:  pointer;
+
+    &:active{
+        box-shadow: inset #333 0px 0px 4px 4px;
+        transform: scale(0.9);
+    }
 `

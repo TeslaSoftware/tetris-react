@@ -5,10 +5,11 @@ export const StyledDisplay = styled.div`
     display: flex;
     align-items: center;
     margin: 0 0 20px 0;
-    border: 4px solid #333;
+    border: 4px solid #1b85dc;
+    box-shadow: #1b85dc 0px 0px 16px 3px;
     min-height: 30px;
     width: 100%;
-    border-radius: 20px;
+    border-radius: 16px;
     color: ${props => (props.gameOver ? 'red' : '#999')};
     background: #000;
     font-family: Pixel, Arial, Helvetica, sans-serif;
