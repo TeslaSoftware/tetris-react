@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSwipeable } from "react-swipeable";
 
 // Styled components
 import { createStage, checkCollision } from "../gameHelpers";
@@ -53,6 +54,7 @@ const Tetris = () => {
       //Also increase the speed
       setDropTime(getDropTime());
     }
+
     if (checkCollision(player, stage, { x: 0, y: 1 })) {
       console.log("dropping caused collision");
       // Game Over
@@ -102,6 +104,13 @@ const Tetris = () => {
     }
   };
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: (eventData) => movePlayer(-1),
+    onSwipedRight: (eventData) => movePlayer(1),
+    onSwipedDown: (eventData) => drop(),
+    onTap: () => playerRotate(stage, 1),
+  });
+
   useInterval(() => {
     drop();
   }, dropTime);
@@ -126,6 +135,7 @@ const Tetris = () => {
       tabIndex="0"
       onKeyDown={(event) => move(event)}
       onKeyUp={keyUp}
+      {...swipeHandlers}
     >
       <StyledTetris>
         <Stage stage={stage} />
