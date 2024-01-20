@@ -20,6 +20,5 @@ export const StyledDisplay = styled.div`
   @media screen and (min-height: 100vw) {
     margin: 0 5px 10px 5px;
     height: 1rem;
-    
   }
 `;
