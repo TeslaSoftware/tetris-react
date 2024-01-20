@@ -2,6 +2,10 @@
 
 Popular Tetris game with usage of React Front-End Framework.
 
+## Live version
+
+Live version of the project is available [here](https://teslasoftware.github.io/tetris-react)
+
 ## Available Scripts for running locally
 
 In the project directory, you can run:
