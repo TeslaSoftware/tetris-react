@@ -53,7 +53,11 @@ export const useStage = (player, resetPlayer) => {
       });
       // Then check if we collided
       if (player.collided) {
-        resetPlayer();
+        // Reset player only if collided at position larger than 0, else is game over.
+        if(player.pos.y > 0){
+          resetPlayer();
+        }
+        
         return sweepRows(newStage);
       }
 

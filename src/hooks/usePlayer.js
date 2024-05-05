@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import { checkCollision } from "../gameHelpers";
-import {STAGE_WIDTH} from "../constants";
+import { wouldCollide } from "../gameHelpers";
+import { STAGE_WIDTH } from "../constants";
 
 import { TETROMINOS, randomTetromino } from "../tetrominos";
 
@@ -17,7 +17,7 @@ export const usePlayer = () => {
       matrix.map((column) => column[rowIndex])
     );
     // Reverse each row to get a rotated matrix
-    if(direction > 0) { 
+    if (direction > 0) {
       return rotatedMatrix.map(row => row.reverse());
     }
 
@@ -32,11 +32,11 @@ export const usePlayer = () => {
     const posX = clonedPlayer.pos.x;
     let offset = 1;
     // Move the tetromino until it does not collide
-    while(checkCollision(clonedPlayer, stage, {x: 0, y: 0})) {
+    while (wouldCollide(clonedPlayer, stage, { x: 0, y: 0 })) {
       clonedPlayer.pos.x += offset;
-      offset = -(offset + (offset > 0 ? 1: -1));
-      const tetrominoWidth =  clonedPlayer.tetromino[0].length;
-      if(offset > tetrominoWidth){
+      offset = -(offset + (offset > 0 ? 1 : -1));
+      const tetrominoWidth = clonedPlayer.tetromino[0].length;
+      if (offset > tetrominoWidth) {
         rotate(clonedPlayer.tetromino, -direction);
         clonedPlayer.pos.x = posX;
         return;
@@ -47,12 +47,6 @@ export const usePlayer = () => {
   };
 
   const updatePlayerPos = ({ x, y, collided }) => {
-    console.log(
-      "moving player pos by x = " + x + " y = " + y + " collided = " + collided
-    );
-    console.log(
-      "NEW POSITION: X = " + (player.pos.x + x) + " Y = " + (player.pos.y + y)
-    );
     setPlayer((prevState) => {
       const newX = prevState.pos.x + x;
       const newY = prevState.pos.y + y;
@@ -60,20 +54,28 @@ export const usePlayer = () => {
       return {
         ...prevState,
         pos: newPostion,
-        collided,
+        collided
+      };
+    });
+  };
+
+  const updatePlayerTetromino = (tetromino) => {
+    setPlayer((prevState) => {
+      return {
+        ...prevState,
+        tetromino,
       };
     });
   };
 
   const resetPlayer = useCallback(() => {
-    console.log("Reseting player");
     setPlayer({
-      //resets to kind of in the middle
+      //resets player/cursor to kind-of in the middle
       pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
       tetromino: randomTetromino().shape,
       collided: false,
     });
   }, []);
 
-  return [player, updatePlayerPos, resetPlayer, playerRotate];
+  return [player, updatePlayerPos, resetPlayer, playerRotate, updatePlayerTetromino];
 };

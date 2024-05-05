@@ -6,7 +6,8 @@ export const createStage = () =>
     new Array(STAGE_WIDTH).fill([0, CELL_CLEAR])
   );
 
-export const checkCollision = (player, stage, { x: moveX, y: moveY }) => {
+export const wouldCollide = (player, stage, { x: moveX, y: moveY }) => {
+  console.log("Would collide " + moveX + " " + moveY);
   for (let y = 0; y < player.tetromino.length; y++) {
     for (let x = 0; x < player.tetromino[y].length; x++) {
       // 1. Check that we are on an actual tetromino cell, instead of empty cell

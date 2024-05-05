@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSwipeable } from "react-swipeable";
 
 // Styled components
-import { createStage, checkCollision } from "../gameHelpers";
+import { createStage, wouldCollide } from "../gameHelpers";
 import { StyledTetrisWrapper, StyledTetris } from "./styles/StyledTetris";
 
 // Components
@@ -25,11 +25,9 @@ const Tetris = () => {
   const [score, setScore, rows, setRows, level, setLevel] =
     useGameStatus(rowsCleared);
 
-  console.log("re-remder");
-
   const movePlayer = (dir) => {
     //Only move player position if not collided
-    if (!checkCollision(player, stage, { x: dir, y: 0 })) {
+    if (!wouldCollide(player, stage, { x: dir, y: 0 })) {
       updatePlayerPos({ x: dir, y: 0 });
     }
   };
@@ -47,26 +45,23 @@ const Tetris = () => {
 
   const getDropTime = () => 1000 / (level + 1) + 200;
 
-  const drop = () => {
+  const drop = (dropDistance = 1) => {
     // Increase level when player cleared 10 rows
     if (rows > (level + 1) * 10) {
       setLevel((prev) => prev + 1);
       //Also increase the speed
       setDropTime(getDropTime());
     }
-
-    if (checkCollision(player, stage, { x: 0, y: 1 })) {
-      console.log("dropping caused collision");
+    if (wouldCollide(player, stage, { x: 0, y: dropDistance })) {
       // Game Over
-      if (player.pos.y < 1) {
-        console.log("GAME OVER!");
+      if (player.pos.y === 0) {
         setGameOver(true);
         setDropTime(null);
-      }
+      } 
+      
       updatePlayerPos({ x: 0, y: 0, collided: true });
     } else {
-      console.log("dropping did not collide");
-      updatePlayerPos({ x: 0, y: 1, collided: false });
+      updatePlayerPos({ x: 0, y: dropDistance });
     }
   };
 
@@ -80,7 +75,6 @@ const Tetris = () => {
   };
 
   const dropPlayer = () => {
-    console.log("dropping player");
     setDropTime(null);
     drop();
   };
@@ -105,11 +99,40 @@ const Tetris = () => {
   };
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: (eventData) => movePlayer(-1),
-    onSwipedRight: (eventData) => movePlayer(1),
-    onSwipedDown: (eventData) => drop(),
+    onSwipedLeft: (eventData) => swipeVertically(eventData.deltaX),
+    onSwipedRight: (eventData) => swipeVertically(eventData.deltaX),
+    onSwipedDown: (eventData) => SwipeDown(eventData.deltaY),
     onTap: () => playerRotate(stage, 1),
   });
+
+  const SwipeDown = (swipeDistance) => {
+    const maxDropDistance = Math.round(swipeDistance / 100);
+
+    // Find out max distance at which we can drop.
+    // This is necessary because the player position does not update wihtin the loop.
+    let dropDistance = 1;
+    while (dropDistance < maxDropDistance
+      && !wouldCollide(player, stage, { x: 0, y: dropDistance + 1 })) {
+      dropDistance++;
+    }
+
+    drop(dropDistance);
+  }
+
+  const swipeVertically = (swipeDistance) => {
+    const moveVal = Math.round(swipeDistance / 100);
+    console.log(moveVal);
+    const direction = moveVal < 0 ? -1 : 1;
+
+    // Find the furthest position based on swipe distance where player can move
+    // Then move to that position and break out of the loop;
+    for (let move = Math.abs(moveVal); move > 0; move--) {
+      if (!wouldCollide(player, stage, { x: move * direction, y: 0 })) {
+        updatePlayerPos({ x: move * direction, y: 0 });
+        break;
+      }
+    }
+  }
 
   useInterval(() => {
     drop();
