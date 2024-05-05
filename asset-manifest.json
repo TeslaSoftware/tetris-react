@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/tetris-react/static/css/main.be1e3450.css",
-    "main.js": "/tetris-react/static/js/main.5ac29bc7.js",
+    "main.js": "/tetris-react/static/js/main.af05fc8e.js",
     "static/js/787.e91ce787.chunk.js": "/tetris-react/static/js/787.e91ce787.chunk.js",
     "static/media/cyberpunk_tetris.png": "/tetris-react/static/media/cyberpunk_tetris.0e056a507e6df97e6fc5.png",
     "static/media/Pixel-LCD-7.woff": "/tetris-react/static/media/Pixel-LCD-7.63d9c15192fdeab6d3a6.woff",
     "index.html": "/tetris-react/index.html",
     "main.be1e3450.css.map": "/tetris-react/static/css/main.be1e3450.css.map",
-    "main.5ac29bc7.js.map": "/tetris-react/static/js/main.5ac29bc7.js.map",
+    "main.af05fc8e.js.map": "/tetris-react/static/js/main.af05fc8e.js.map",
     "787.e91ce787.chunk.js.map": "/tetris-react/static/js/787.e91ce787.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.be1e3450.css",
-    "static/js/main.5ac29bc7.js"
+    "static/js/main.af05fc8e.js"
   ]
 }
