@@ -103,10 +103,11 @@ const Tetris = () => {
     onSwipedRight: (eventData) => swipeVertically(eventData.deltaX),
     onSwipedDown: (eventData) => SwipeDown(eventData.deltaY),
     onTap: () => playerRotate(stage, 1),
+    preventScrollOnSwipe: true,
   });
 
   const SwipeDown = (swipeDistance) => {
-    const maxDropDistance = Math.round(swipeDistance / 100);
+    const maxDropDistance = Math.round(swipeDistance / 50);
 
     // Find out max distance at which we can drop.
     // This is necessary because the player position does not update wihtin the loop.
@@ -120,7 +121,7 @@ const Tetris = () => {
   }
 
   const swipeVertically = (swipeDistance) => {
-    const moveVal = Math.round(swipeDistance / 100);
+    const moveVal = Math.round(swipeDistance / 50);
     console.log(moveVal);
     const direction = moveVal < 0 ? -1 : 1;
 
